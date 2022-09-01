@@ -1,0 +1,45 @@
+﻿@page
+@model EventPlanning.Pages.Account.RegisterModel
+@{
+    ViewData["Title"] = "Регистрация";
+}
+
+<h1>Регистрация</h1>
+<hr />
+<div class="row">
+    <div class="alert alert-info alert-dismissible fade show" role="alert" id="error_alert" runat="server">
+        Перед вводом данных убедитесь что вы ввели все правильно.
+    </div>
+    <form method="post" class="col-md-4">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group mb-3">
+            <label asp-for="User.Email" class="control-label">Введите адрес электронной почты</label>
+            <input asp-for="User.Email" class="form-control" />
+            <span asp-validation-for="User.Email" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="User.Password" class="control-label">Введите пароль</label>
+            <input asp-for="User.Password" class="form-control" type="password" />
+            <span asp-validation-for="User.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-4">
+            <label asp-for="User.ConfirmPassword" class="control-label">Подтвердите пароль</label>
+            <input asp-for="User.ConfirmPassword" class="form-control" type="password" />
+            <span asp-validation-for="User.Password" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Зарегистрироваться" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+
+<div>
+    <hr />
+    <p>Уже зарегистрированы? <a asp-page="/Account/Login">Войдите в аккаунт!</a></p>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
