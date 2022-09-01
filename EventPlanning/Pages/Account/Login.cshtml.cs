@@ -28,8 +28,11 @@ namespace EventPlanning.Pages.Account
             {
                 return Page();
             }
-
-            return RedirectToPage("/Index");
+            if(_context.Users.First(p => p.Email == User.Email && p.Password == User.Password && p.IsEmailConfirmed) != null && _context.Users.Count() > 0)
+            {
+                return RedirectToPage("/Index");
+            }
+            return Page();
         }
     }
 }
