@@ -33,5 +33,6 @@ namespace EventPlanning
                 }
             }
         }
+        public DateTimeOffset CreatedIn { get; set; } = DateTimeOffset.Now;
     }
 }

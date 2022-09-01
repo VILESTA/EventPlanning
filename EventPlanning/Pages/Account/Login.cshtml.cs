@@ -29,10 +29,7 @@ namespace EventPlanning.Pages.Account
                 return Page();
             }
 
-            _context.Users.Add(User);
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("./Index");
+            return RedirectToPage("/Index");
         }
     }
 }
