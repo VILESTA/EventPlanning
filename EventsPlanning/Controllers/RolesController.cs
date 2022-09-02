@@ -13,14 +13,14 @@ namespace EventsPlanning.Controllers
 {
     public class RolesController : Controller
     {
-        RoleManager<IdentityRole> _roleManager;
+        ApplicationRoleManager _roleManager;
         ApplicationUserManager _userManager;
 
         public RolesController()
         {
         }
 
-        public RolesController(RoleManager<IdentityRole> roleManager, ApplicationUserManager userManager)
+        public RolesController(ApplicationRoleManager roleManager, ApplicationUserManager userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -38,11 +38,11 @@ namespace EventsPlanning.Controllers
             }
         }
 
-        public RoleManager<IdentityRole> RoleManager
+        public ApplicationRoleManager RoleManager
         {
             get
             {
-                return _roleManager ?? HttpContext.GetOwinContext().Get<RoleManager<IdentityRole>>();
+                return _roleManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
             }
             private set
             {
@@ -50,7 +50,7 @@ namespace EventsPlanning.Controllers
             }
         }
 
-        public ActionResult Index() => View(RoleManager.Roles);
+        public ActionResult Index() => View(RoleManager.Roles.ToList());
 
         public ActionResult Create() => View();
         [HttpPost]

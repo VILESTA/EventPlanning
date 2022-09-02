@@ -16,5 +16,5 @@
         </tr>
     }
 </table>
-<a asp-action="Create">Добавить роль</a>
-<a asp-action="UserList">Список пользователей</a>
+@Html.ActionLink("Добавить роль", "Create", "Roles")
+@Html.ActionLink("Список пользователей", "UserList", "Roles")
