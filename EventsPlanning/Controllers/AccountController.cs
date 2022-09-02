@@ -181,7 +181,6 @@ namespace EventsPlanning.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 
                     var emailMessage = new MimeMessage();
-
                     emailMessage.From.Add(new MailboxAddress("Подтверждение регистрации", "tkachik.yuratkachik@yandex.ru"));
                     emailMessage.To.Add(new MailboxAddress("", user.Email));
                     emailMessage.Subject = "Регистрация Events Planning";
@@ -199,8 +198,6 @@ namespace EventsPlanning.Controllers
                         await client.DisconnectAsync(true);
                     }
 
-                    //await UserManager.SendEmailAsync(user.Id, "Подтверждение учетной записи Event Planning", "Подтвердите вашу учетную запись Event Planning, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>");
-
                     return RedirectToAction("Confirm", "Account", new { Email = user.Email });
                 }
                 AddErrors(result);
@@ -210,6 +207,8 @@ namespace EventsPlanning.Controllers
             return View(model);
         }
 
+        //
+        // GET: /Account/Confirm
         [AllowAnonymous]
         public string Confirm(string Email)
         {
