@@ -7,7 +7,8 @@
         <tr>
             <td>@user.Email</td>
             <td>
-                <a class="btn btn-sm btn-primary" asp-controller="Roles" asp-action="Edit" asp-route-userid="@user.Id">Права доступа</a>
+                @Html.ActionLink("Права доступа", "Edit", "Roles")
+                @*user.Id*@
             </td>
         </tr>
     }

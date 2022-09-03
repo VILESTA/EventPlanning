@@ -13,28 +13,15 @@ namespace EventsPlanning.Controllers
 {
     public class RolesController : Controller
     {
-        ApplicationRoleManager _roleManager;
-        ApplicationUserManager _userManager;
-
         public RolesController()
         {
-        }
-
-        public RolesController(ApplicationRoleManager roleManager, ApplicationUserManager userManager)
-        {
-            _roleManager = roleManager;
-            _userManager = userManager;
         }
 
         public ApplicationUserManager UserManager
         {
             get
             {
-                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            }
-            private set
-            {
-                _userManager = value;
+                return HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
         }
 
@@ -42,11 +29,7 @@ namespace EventsPlanning.Controllers
         {
             get
             {
-                return _roleManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
-            }
-            private set
-            {
-                _roleManager = value;
+                return HttpContext.GetOwinContext().GetUserManager<ApplicationRoleManager>();
             }
         }
 
