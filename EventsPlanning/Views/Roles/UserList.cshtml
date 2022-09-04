@@ -1,4 +1,7 @@
 ﻿@model IEnumerable<EventsPlanning.Models.ApplicationUser>
+@{
+    ViewBag.Title = "Список пользователей";
+}
 
 <h2>Список пользователей</h2>
 <table class="table">
@@ -7,8 +10,7 @@
         <tr>
             <td>@user.Email</td>
             <td>
-                @Html.ActionLink("Права доступа", "Edit", "Roles")
-                @*user.Id*@
+                <a href="/Roles/Edit?userId=@user.Id">Права доступа</a>
             </td>
         </tr>
     }

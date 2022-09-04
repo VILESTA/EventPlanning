@@ -12,6 +12,8 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using EventsPlanning.Models;
 using System.Diagnostics;
+using System.Web.DynamicData;
+using System.Collections.ObjectModel;
 
 namespace EventsPlanning
 {
@@ -115,6 +117,38 @@ namespace EventsPlanning
         public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
         {
             return new ApplicationRoleManager(new RoleStore<IdentityRole>(context.Get<ApplicationDbContext>()));
+        }
+    }
+
+    public class ApplicationEventManager : IDisposable
+    {
+        public List<Event> Events { get; set; }
+
+        public ApplicationEventManager(List<Event> events)
+        {
+            Events = events;
+        }
+
+        public static ApplicationEventManager Create(IdentityFactoryOptions<ApplicationEventManager> options, IOwinContext context)
+        {
+            return new ApplicationEventManager(context.Get<ApplicationEventDbContext>().Events.ToList());
+        }
+
+        public bool Add(Event _event)
+        {
+            try
+            {
+                Events.Add(_event);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

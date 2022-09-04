@@ -1,8 +1,11 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Spatial;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.Owin.BuilderProperties;
 
 namespace EventsPlanning.Models
 {
@@ -18,6 +21,26 @@ namespace EventsPlanning.Models
         }
     }
 
+    public class Event
+    {
+        public string EventId { get; set; }
+        public string Title { get; set; }
+        public DateTime DateTime { get; set; }
+        public string Address { get; set; }
+
+        public Event()
+        {
+        }
+
+        public Event(string title, string address, DateTime dateTime)
+        { 
+            EventId = Guid.NewGuid().ToString();
+            Title = title;
+            Address = address;
+            DateTime = dateTime;
+        }
+    }
+
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext() : base("DefaultConnection", throwIfV1Schema: false)
@@ -28,6 +51,20 @@ namespace EventsPlanning.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+    }
+
+    public class ApplicationEventDbContext : DbContext
+    {
+        public DbSet<Event> Events { get; set; }
+        public ApplicationEventDbContext() : base("DefaultConnection")
+        {
+            Database.CreateIfNotExists();
+        }
+
+        public static ApplicationEventDbContext Create()
+        {
+            return new ApplicationEventDbContext();
         }
     }
 }

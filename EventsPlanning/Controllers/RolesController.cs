@@ -33,6 +33,7 @@ namespace EventsPlanning.Controllers
             }
         }
 
+        [Authorize(Roles = "admin")]
         public ActionResult Index() => View(RoleManager.Roles.ToList());
 
         public ActionResult Create() => View();
@@ -57,6 +58,7 @@ namespace EventsPlanning.Controllers
             return View(name);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult> Delete(string id)
         {
@@ -70,14 +72,16 @@ namespace EventsPlanning.Controllers
 
         public ActionResult UserList() => View(UserManager.Users.ToList());
 
-        public async Task<ActionResult> Edit(string userId)
+
+        [HttpGet]
+        public ActionResult Edit(string userId)
         {
             // получаем пользователя
-            ApplicationUser user = await UserManager.FindByIdAsync(userId);
+            ApplicationUser user = UserManager.FindByIdAsync(userId).Result;
             if (user != null)
             {
                 // получем список ролей пользователя
-                var userRoles = await UserManager.GetRolesAsync(user.Id);
+                var userRoles = UserManager.GetRolesAsync(user.Id).Result;
                 var allRoles = RoleManager.Roles.ToList();
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
@@ -91,15 +95,17 @@ namespace EventsPlanning.Controllers
 
             return View("Error");
         }
+
+
         [HttpPost]
-        public async Task<ActionResult> Edit(string userId, List<string> roles)
+        public ActionResult Edit(string userId, List<string> roles)
         {
             // получаем пользователя
-            ApplicationUser user = await UserManager.FindByIdAsync(userId);
+            ApplicationUser user = UserManager.FindByIdAsync(userId).Result;
             if (user != null)
             {
                 // получем список ролей пользователя
-                var userRoles = await UserManager.GetRolesAsync(user.Id);
+                var userRoles = UserManager.GetRolesAsync(user.Id).Result;
                 // получаем все роли
                 var allRoles = RoleManager.Roles.ToList();
                 // получаем список ролей, которые были добавлены
@@ -107,9 +113,9 @@ namespace EventsPlanning.Controllers
                 // получаем роли, которые были удалены
                 var removedRoles = userRoles.Except(roles);
 
-                await UserManager.AddToRolesAsync(user.Id, addedRoles.ToArray());
+                UserManager.AddToRolesAsync(user.Id, addedRoles.ToArray()).Wait();
 
-                await UserManager.RemoveFromRolesAsync(user.Id, removedRoles.ToArray());
+                UserManager.RemoveFromRolesAsync(user.Id, removedRoles.ToArray()).Wait();
 
                 return RedirectToAction("UserList");
             }

@@ -225,7 +225,13 @@ namespace EventsPlanning.Controllers
                 return View("Error");
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+            if (result.Succeeded)
+            {
+                var user = await UserManager.FindByIdAsync(userId);
+                await SignInManager.SignInAsync(user, true, false);
+                return View("ConfirmEmail");
+            }
+            return View("Error");
         }
 
         //

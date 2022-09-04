@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.Owin;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -8,9 +9,18 @@ namespace EventsPlanning.Controllers
 {
     public class HomeController : Controller
     {
+        public ApplicationEventManager EventManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().GetUserManager<ApplicationEventManager>();
+            }
+        }
+
         public ActionResult Index()
         {
-            return View();
+            ViewBag.Message = "Здесь вы можете найти мероприятия, которые будут вам интересны";
+            return View(EventManager.Events);
         }
 
         public ActionResult About()

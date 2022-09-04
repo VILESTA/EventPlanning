@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNet.Identity.EntityFramework
 @model EventsPlanning.Models.ChangeRoleViewModel
+@{
+    ViewBag.Title = $"Изменение ролей для пользователя {Model.UserEmail}";
+}
 
 <h2>Изменение ролей для пользователя @Model.UserEmail</h2>
 
