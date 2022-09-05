@@ -212,6 +212,59 @@ namespace EventsPlanning
                 return false;
             }
         }
+        
+        public bool IsUserACreatorOfEvent(Event _event, string userId)
+        {
+            try
+            {
+                Event usersEvent = context.Get<ApplicationEventDbContext>().Events.First(e => e.EventId == _event.EventId && e.AuthorId == userId);
+                if(usersEvent != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public int CountOfMembersOfEvent(Event _event)
+        {
+            int count = 0;
+            List<EventUsers> eventUsers = context.Get<ApplicationEventDbContext>().EventsUsers.ToList();
+            if (eventUsers != null)
+            {
+                foreach (var item in eventUsers)
+                {
+                    if(item.EventId == _event.EventId)
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        public string AuthorOfEvent(Event _event)
+        {
+            ApplicationUserManager users = context.GetUserManager<ApplicationUserManager>();
+            if (users != null)
+            {
+                foreach (var item in users.Users)
+                {
+                    if (item.Id == _event.AuthorId)
+                    {
+                        return item.UserName;
+                    }
+                }
+            }
+            return "Автор не найден";
+        }
 
         public void Dispose()
         {

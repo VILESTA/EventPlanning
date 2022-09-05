@@ -5,7 +5,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <h2>@Model.Title [сколько-то / @Model.MaxMembersCount]</h2>
+        <h2>@Model.Title [ @ViewBag.CountOfMembers / @Model.MaxMembersCount ]</h2>
+        <h6>Организатор: @ViewBag.Author</h6>
     </div>
     <div class="row">
         <h3>@Model.EventId</h3>
@@ -21,17 +22,35 @@
                 {
                     if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).IsUserOnEvent(Model.EventId))
                     {
-                    @Html.ActionLink("Отменить запись", "SignOutFromEvent", routeValues: new { eventId = Model.EventId}, htmlAttributes: new { @class = "btn btn-default" })
+                        @Html.ActionLink("Отменить запись", "SignOutFromEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-default" })
                     }
                     else
                     {
-                    @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                        @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
                     }
                 }
                 else
                 {
-                    @Html.ActionLink("Удалить", "Delete", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-danger" })
+                    if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).IsUserACreatorOfEvent(Model.EventId))
+                    {
+                        @Html.ActionLink("Удалить мероприятие", "Delete", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-danger" })
+                    }
+                    else
+                    {
+                        if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).IsUserOnEvent(Model.EventId))
+                        {
+                            @Html.ActionLink("Отменить запись", "SignOutFromEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-default" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                        }
+                    }
                 }
+            }
+            else
+            {
+                @Html.ActionLink("Войдите в аккаунт для записи на мероприятие", "", routeValues: null, htmlAttributes: new { @class = "btn btn-primary", disabled = "true" })
             }
         </div>
     </div>

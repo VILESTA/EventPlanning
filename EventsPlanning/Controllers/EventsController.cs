@@ -65,19 +65,20 @@ namespace EventsPlanning.Controllers
         [HttpGet]
         public ActionResult Event(string eventId)
         {
-            if(eventId == null)
+            if (eventId == null)
             {
                 return View("Error");
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
+            ViewBag.CountOfMembers = EventManager.CountOfMembersOfEvent(cur_event).ToString();
+            ViewBag.Author = EventManager.AuthorOfEvent(cur_event);
             return View(cur_event);
         }
 
         [HttpGet]
         public ActionResult SignUpForEvent(string eventId)
         {
-            var user = SignInManager.UserManager.FindById(User.Identity.GetUserId());
-            if (user == null)
+            if (User.Identity.GetUserId() == null)
             {
                 return View("Error");
             }
@@ -86,15 +87,14 @@ namespace EventsPlanning.Controllers
                 return View("Error");
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
-            EventManager.SignUpUser(cur_event, user.Id);
+            EventManager.SignUpUser(cur_event, User.Identity.GetUserId());
             return View("Event", cur_event);
         }
 
         [HttpGet]
         public ActionResult SignOutFromEvent(string eventId)
         {
-            var user = SignInManager.UserManager.FindById(User.Identity.GetUserId());
-            if (user == null)
+            if (User.Identity.GetUserId() == null)
             {
                 return View("Error");
             }
@@ -103,14 +103,13 @@ namespace EventsPlanning.Controllers
                 return View("Error");
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
-            EventManager.SignOutUser(cur_event, user.Id);
+            EventManager.SignOutUser(cur_event, User.Identity.GetUserId());
             return View("Event", cur_event);
         }
 
         public bool IsUserOnEvent(string eventId)
         {
-            var user = SignInManager.UserManager.FindById(User.Identity.GetUserId());
-            if (user == null)
+            if (User.Identity.GetUserId() == null)
             {
                 return false;
             }
@@ -119,11 +118,25 @@ namespace EventsPlanning.Controllers
                 return false;
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
-            if(EventManager.IsUserOnEvent(cur_event, user.Id))
+            if(EventManager.IsUserOnEvent(cur_event, User.Identity.GetUserId()))
             {
                 return true;
             }
             return false;
+        }
+
+        public bool IsUserACreatorOfEvent(string eventId)
+        {
+            if (User.Identity.GetUserId() == null)
+            {
+                return false;
+            }
+            if (eventId == null)
+            {
+                return false;
+            }
+            Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
+            return EventManager.IsUserOnEvent(cur_event, User.Identity.GetUserId());
         }
 
         [Authorize(Roles = "admin")]
