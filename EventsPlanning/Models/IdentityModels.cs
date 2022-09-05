@@ -1,10 +1,12 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Owin.BuilderProperties;
 
 namespace EventsPlanning.Models
@@ -23,21 +25,53 @@ namespace EventsPlanning.Models
 
     public class Event
     {
+        [BindProperty]
         public string EventId { get; set; }
+        [BindProperty]
+        public string AuthorId { get; set; }
+        [BindProperty]
         public string Title { get; set; }
+        [BindProperty]
+        [DataType(DataType.Date)]
         public DateTime DateTime { get; set; }
+        
+        [BindProperty]
         public string Address { get; set; }
+
+        [BindProperty]
+        public int MaxMembersCount { get; set; }
 
         public Event()
         {
         }
 
-        public Event(string title, string address, DateTime dateTime)
+        public Event(string title, string authorID, string address, DateTime dateTime, int maxMembersCount)
         { 
             EventId = Guid.NewGuid().ToString();
+            AuthorId = authorID;
             Title = title;
             Address = address;
             DateTime = dateTime;
+            MaxMembersCount = maxMembersCount;
+        }
+    }
+
+    public class EventUsers
+    {
+        [Key]
+        [BindProperty]
+        public string EventId { get; set; }
+        [BindProperty]
+        public string UserId { get; set; }
+
+        public EventUsers()
+        {
+        }
+
+        public EventUsers(string eventId, string userId)
+        {
+            UserId = userId;
+            EventId = eventId;
         }
     }
 
@@ -57,6 +91,7 @@ namespace EventsPlanning.Models
     public class ApplicationEventDbContext : DbContext
     {
         public DbSet<Event> Events { get; set; }
+        public DbSet<EventUsers> EventsUsers { get; set; }
         public ApplicationEventDbContext() : base("DefaultConnection")
         {
             Database.CreateIfNotExists();

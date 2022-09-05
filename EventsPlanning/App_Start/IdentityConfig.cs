@@ -123,15 +123,17 @@ namespace EventsPlanning
     public class ApplicationEventManager : IDisposable
     {
         public List<Event> Events { get; set; }
+        public static IOwinContext context { get; set; }
 
         public ApplicationEventManager(List<Event> events)
         {
             Events = events;
         }
 
-        public static ApplicationEventManager Create(IdentityFactoryOptions<ApplicationEventManager> options, IOwinContext context)
+        public static ApplicationEventManager Create(IdentityFactoryOptions<ApplicationEventManager> options, IOwinContext _context)
         {
-            return new ApplicationEventManager(context.Get<ApplicationEventDbContext>().Events.ToList());
+            context = _context;
+            return new ApplicationEventManager(_context.Get<ApplicationEventDbContext>().Events.ToList());
         }
 
         public bool Add(Event _event)
@@ -139,7 +141,71 @@ namespace EventsPlanning
             try
             {
                 Events.Add(_event);
+                context.Get<ApplicationEventDbContext>().Entry(_event).State = EntityState.Added;
+                context.Get<ApplicationEventDbContext>().SaveChanges();
                 return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool SignUpUser(Event _event, string userId)
+        {
+            try
+            {
+                int membersInEvent = 0;
+                foreach (var member in context.Get<ApplicationEventDbContext>().EventsUsers)
+                {
+                    if (member.EventId == _event.EventId)
+                    {
+                        membersInEvent++;
+                    }
+                }
+                if (membersInEvent >= _event.MaxMembersCount)
+                {
+                    return false;
+                }
+                context.Get<ApplicationEventDbContext>().Entry(new EventUsers(_event.EventId, userId)).State = EntityState.Added;
+                context.Get<ApplicationEventDbContext>().SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool SignOutUser(Event _event, string userId)
+        {
+            try
+            {
+                EventUsers eventUsers = context.Get<ApplicationEventDbContext>().EventsUsers.First(e => e.EventId == _event.EventId && e.UserId == userId);
+                context.Get<ApplicationEventDbContext>().Entry(eventUsers).State = EntityState.Deleted;
+                context.Get<ApplicationEventDbContext>().SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool IsUserOnEvent(Event _event, string userId)
+        {
+            try
+            {
+
+                EventUsers eventUsers = context.Get<ApplicationEventDbContext>().EventsUsers.First(e => e.EventId == _event.EventId && e.UserId == userId);
+                if(eventUsers != null)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (Exception)
             {
