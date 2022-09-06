@@ -30,10 +30,10 @@
                     }
                 }
                 else
-                {
+                {@*
                     if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).IsUserACreatorOfEvent(Model.EventId))
-                    {
-                        @Html.ActionLink("Удалить мероприятие", "Delete", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-danger" })
+                    {*@
+                        @Html.ActionLink("Удалить мероприятие", "Delete", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-danger" })@*
                     }
                     else
                     {
@@ -45,7 +45,7 @@
                         {
                             @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
                         }
-                    }
+                    }*@
                 }
             }
             else
