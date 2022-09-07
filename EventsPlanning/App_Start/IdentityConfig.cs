@@ -14,6 +14,7 @@ using EventsPlanning.Models;
 using System.Diagnostics;
 using System.Web.DynamicData;
 using System.Collections.ObjectModel;
+using System.Net.PeerToPeer;
 
 namespace EventsPlanning
 {
@@ -38,13 +39,15 @@ namespace EventsPlanning
     // Настройка диспетчера пользователей приложения. UserManager определяется в ASP.NET Identity и используется приложением.
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {
+        public static IOwinContext context;
         public ApplicationUserManager(IUserStore<ApplicationUser> store) : base(store)
         {
         }
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
+        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext _context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            context = _context;
+            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(_context.Get<ApplicationDbContext>()));
             // Настройка логики проверки имен пользователей
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
@@ -87,6 +90,23 @@ namespace EventsPlanning
                     new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
+        }
+
+        public override async Task<ApplicationUser> FindAsync(string email, string password)
+        {
+            ApplicationUser user = context.Get<ApplicationDbContext>().Users.First(u => u.Email == email);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return (await CheckPasswordAsync(user, password)) ? user : null;
+        }
+
+        public void ChangeUsername(string userID, string newUsername)
+        {
+            context.Get<ApplicationDbContext>().Users.First(u => u.Id == userID).UserName = newUsername;
+            context.Get<ApplicationDbContext>().SaveChanges();
         }
     }
 

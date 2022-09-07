@@ -61,6 +61,7 @@ namespace EventsPlanning.Controllers
                 : message == ManageMessageId.Error ? "Произошла ошибка."
                 : message == ManageMessageId.AddPhoneSuccess ? "Ваш номер телефона добавлен."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Ваш номер телефона удален."
+                : message == ManageMessageId.ChangeUsernameSuccess ? "Ваше отбражаемое имя изменено."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -211,6 +212,33 @@ namespace EventsPlanning.Controllers
                 await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
+        }
+
+        public async Task<ActionResult> ChangeUsername()
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
+            {
+                return View(user);
+            }
+            ModelState.AddModelError("", "Не найден пользователь, войдите в аккаунт и попробуйте снова");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeUsername(string UserName)
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
+            {
+                UserManager.ChangeUsername(User.Identity.GetUserId(), UserName);
+                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                SignInManager.SignIn(user, isPersistent: true, rememberBrowser: true);
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUsernameSuccess });
+            }
+            ModelState.AddModelError("", "Не найден пользователь, войдите в аккаунт и попробуйте снова");
+            return View();
         }
 
         //
@@ -377,6 +405,7 @@ namespace EventsPlanning.Controllers
         {
             AddPhoneSuccess,
             ChangePasswordSuccess,
+            ChangeUsernameSuccess,
             SetTwoFactorSuccess,
             SetPasswordSuccess,
             RemoveLoginSuccess,

@@ -1,0 +1,25 @@
+﻿@model EventsPlanning.Models.ApplicationUser
+@{
+    ViewBag.Title = "Изменение отбражающегося имени";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("ChangeUsername", "Manage", method: FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(m => m.UserName, "Отображаемое имя", new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", name = "Username" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Сменить имя" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+}

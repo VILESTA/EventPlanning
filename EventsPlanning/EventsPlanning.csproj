@@ -631,6 +631,7 @@
     <Content Include="Views\Roles\Edit.cshtml" />
     <Content Include="Views\Events\Create.cshtml" />
     <Content Include="Views\Events\Event.cshtml" />
+    <Content Include="Views\Manage\ChangeUsername.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

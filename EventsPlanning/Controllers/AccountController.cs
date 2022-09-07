@@ -84,7 +84,7 @@ namespace EventsPlanning.Controllers
             {
                 if (user.EmailConfirmed == true)
                 {
-                    var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+                    var result = await SignInManager.PasswordSignInAsync(user.UserName, model.Password, model.RememberMe, false);
                     switch (result)
                     {
                         case SignInStatus.Success:
