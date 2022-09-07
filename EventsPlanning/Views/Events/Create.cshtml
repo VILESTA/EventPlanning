@@ -31,7 +31,7 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.DateTime, "Время проведения", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.DateTime, "Дата и время проведения", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control", type = "datetime-local", name = "DateTime" } })
             @Html.ValidationMessageFor(model => model.DateTime, "", new { @class = "text-danger" })
@@ -55,5 +55,5 @@
 }
 
 <div>
-    @Html.ActionLink("Вернуться к списку мероприятий", "Index", "Home", null, null)
+    @Html.ActionLink("Вернуться к списку мероприятий", "Index", "Home", null, htmlAttributes: new { @class = "btn btn-default" })
 </div>

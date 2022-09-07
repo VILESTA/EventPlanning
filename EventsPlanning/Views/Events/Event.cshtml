@@ -31,7 +31,7 @@
                 }
                 else
                 {
-                    if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).IsUserACreatorOfEvent(Model.EventId))
+                    if (ViewBag.IsAuthor == 0)
                     { 
                         @Html.ActionLink("Удалить мероприятие", "Delete", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-danger" })
                     }

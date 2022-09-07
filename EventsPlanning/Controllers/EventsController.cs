@@ -72,7 +72,28 @@ namespace EventsPlanning.Controllers
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
             ViewBag.CountOfMembers = EventManager.CountOfMembersOfEvent(cur_event).ToString();
             ViewBag.Author = EventManager.AuthorOfEvent(cur_event);
+            ViewBag.IsAuthor = String.Compare(EventManager.AuthorIDOfEvent(cur_event), User.Identity.GetUserId());
             return View(cur_event);
+        }
+
+        [HttpGet]
+        public ActionResult Delete(string eventId)
+        {
+            if (eventId == null)
+            {
+                return View("Error");
+            }
+            Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
+            bool result = EventManager.Delete(cur_event);
+            if (result)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ModelState.AddModelError(string.Empty, "Произошла неизвестная ошибка при удалении мероприятия");
+            }
+            return View("Event", cur_event);
         }
 
         [HttpGet]
@@ -127,15 +148,20 @@ namespace EventsPlanning.Controllers
 
         public bool IsUserACreatorOfEvent(string eventId)
         {
-            if (User.Identity.GetUserId() == null)
-            {
-                return false;
-            }
             if (eventId == null)
             {
                 return false;
             }
-            Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
+            Event cur_event = null;
+            foreach (var item in EventManager.Events)
+            {
+                if(item.EventId == eventId)
+                {
+                    cur_event = item;
+                }
+            }
+            ViewBag.EventData = cur_event.AuthorId;
+            ViewBag.AuthorID = User.Identity.GetUserId();
             return EventManager.IsUserOnEvent(cur_event, User.Identity.GetUserId());
         }
 

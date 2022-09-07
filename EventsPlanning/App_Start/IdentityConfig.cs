@@ -142,6 +142,7 @@ namespace EventsPlanning
 
     public class ApplicationEventManager : IDisposable
     {
+        public ApplicationUser cur_user = null;
         public List<Event> Events { get; set; }
         public static IOwinContext context { get; set; }
 
@@ -162,6 +163,28 @@ namespace EventsPlanning
             {
                 Events.Add(_event);
                 context.Get<ApplicationEventDbContext>().Entry(_event).State = EntityState.Added;
+                context.Get<ApplicationEventDbContext>().SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool Delete(Event _event)
+        {
+            try
+            {
+                foreach (var item in context.Get<ApplicationEventDbContext>().EventsUsers)
+                {
+                    if (item.EventId == _event.EventId)
+                    {
+                        context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Deleted;
+                    }
+                }
+                Events.Remove(_event);
+                context.Get<ApplicationEventDbContext>().Entry(_event).State = EntityState.Deleted;
                 context.Get<ApplicationEventDbContext>().SaveChanges();
                 return true;
             }
@@ -216,16 +239,19 @@ namespace EventsPlanning
         {
             try
             {
-
-                EventUsers eventUsers = context.Get<ApplicationEventDbContext>().EventsUsers.First(e => e.EventId == _event.EventId && e.UserId == userId);
-                if(eventUsers != null)
-                {
-                    return true;
+                ApplicationUserManager userManager = context.GetUserManager<ApplicationUserManager>();
+                cur_user = userManager.FindById(userId);
+                foreach (var eventUsers in context.Get<ApplicationEventDbContext>().EventsUsers) {
+                    if (eventUsers.EventId == _event.EventId)
+                    {
+                        if(eventUsers.UserId == cur_user.Id)
+                        {
+                            return true;
+                        }
+                        break;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
             catch (Exception)
             {
@@ -237,15 +263,15 @@ namespace EventsPlanning
         {
             try
             {
-                Event usersEvent = context.Get<ApplicationEventDbContext>().Events.First(e => e.EventId == _event.EventId && e.AuthorId == userId);
-                if(usersEvent != null)
+                ApplicationSignInManager signInManager = context.GetUserManager<ApplicationSignInManager>();
+                foreach (var @event in context.Get<ApplicationEventDbContext>().Events)
                 {
-                    return true;
+                    if(@event.AuthorId == cur_user.Id)
+                    {
+                        return true;
+                    }
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
             }
             catch (Exception)
             {
@@ -280,6 +306,22 @@ namespace EventsPlanning
                     if (item.Id == _event.AuthorId)
                     {
                         return item.UserName;
+                    }
+                }
+            }
+            return "Автор не найден";
+        }
+
+        public string AuthorIDOfEvent(Event _event)
+        {
+            ApplicationUserManager users = context.GetUserManager<ApplicationUserManager>();
+            if (users != null)
+            {
+                foreach (var item in users.Users)
+                {
+                    if (item.Id == _event.AuthorId)
+                    {
+                        return item.Id;
                     }
                 }
             }
