@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Data.Entity.Spatial;
@@ -23,6 +24,18 @@ namespace EventsPlanning.Models
         }
     }
 
+    public class AdditionalField
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+
+        public AdditionalField()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+    }
+
     public class Event
     {
         [BindProperty]
@@ -31,6 +44,10 @@ namespace EventsPlanning.Models
         public string AuthorId { get; set; }
         [BindProperty]
         public string Title { get; set; }
+
+        [BindProperty]
+        public List<AdditionalField> Fields { get; set; } = new List<AdditionalField>();
+
         [BindProperty]
         [DataType(DataType.Date)]
         public DateTime DateTime { get; set; }
@@ -43,6 +60,9 @@ namespace EventsPlanning.Models
 
         public Event()
         {
+            Fields.Add(new AdditionalField());
+            Fields.Add(new AdditionalField());
+            Fields.Add(new AdditionalField());
         }
 
         public Event(string title, string authorID, string address, DateTime dateTime, int maxMembersCount)

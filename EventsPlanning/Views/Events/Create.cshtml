@@ -22,8 +22,25 @@
         </div>
     </div>
 
+    <div class="form-group container">
+        @Html.LabelFor(model => model.Fields, "Дополнительная информация", htmlAttributes: new { @class = "control-label" })
+        @foreach (var item in Model.Fields)
+        {
+            <div class="form-inline">
+                <div class="form-group col-md-3">
+                    @Html.EditorFor(model => item.Name, new { htmlAttributes = new { @class = "form-control", name = "Fields" } })
+                    @Html.ValidationMessageFor(model => item.Name, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group col-md-5">
+                    @Html.EditorFor(model => item.Value, new { htmlAttributes = new { @class = "form-control", name = "Fields" } })
+                    @Html.ValidationMessageFor(model => item.Value, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+    </div>
+
     <div class="form-group">
-        @Html.LabelFor(model => model.Address, "Адрес проведения", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.Address, "Местоположение", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control", name = "Address" } })
             @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
@@ -31,7 +48,7 @@
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.DateTime, "Дата и время проведения", htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.DateTime, "Дата и время", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.EditorFor(model => model.DateTime, new { htmlAttributes = new { @class = "form-control", type = "datetime-local", name = "DateTime" } })
             @Html.ValidationMessageFor(model => model.DateTime, "", new { @class = "text-danger" })

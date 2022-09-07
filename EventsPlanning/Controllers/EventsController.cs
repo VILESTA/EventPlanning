@@ -35,7 +35,7 @@ namespace EventsPlanning.Controllers
         [Authorize(Roles = "admin")]
         public ActionResult Create()
         {
-            return View();
+            return View(new Event());
         }
 
         [Authorize(Roles = "admin")]
@@ -76,6 +76,7 @@ namespace EventsPlanning.Controllers
             return View(cur_event);
         }
 
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public ActionResult Delete(string eventId)
         {
@@ -165,14 +166,10 @@ namespace EventsPlanning.Controllers
             return EventManager.IsUserOnEvent(cur_event, User.Identity.GetUserId());
         }
 
-        [Authorize(Roles = "admin")]
-        public ActionResult Edit()
-        {
-            return View();
-        }
+
 
         [Authorize(Roles = "admin")]
-        public ActionResult Delete()
+        public ActionResult Edit()
         {
             return View();
         }
