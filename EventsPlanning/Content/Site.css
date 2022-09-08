@@ -28,3 +28,11 @@ textarea {
     background-color: #777;
     border-color: #fff
 }
+
+.col-name{
+    width: 100px;
+}
+
+.col-value{
+    width: 400px;
+}
