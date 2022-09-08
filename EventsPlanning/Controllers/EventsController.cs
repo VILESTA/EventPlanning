@@ -37,19 +37,25 @@ namespace EventsPlanning.Controllers
         Event new_event { get; set; } = new Event();
 
         [Authorize(Roles = "admin")]
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult Create(int addFieldsCount = 0)
         {
-            new_event = new Event();
+            if (addFieldsCount < 0) addFieldsCount = 0;
+            for (int i = 0; i < addFieldsCount; i++)
+            {
+                new_event.Fields.Add(new AdditionalField());
+            }
             return View(new_event);
         }
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult Create(string Title, string Address, DateTime DateTime, int MaxMembersCount)
+        public ActionResult Create(string title, List<AdditionalField> addFields, string address, DateTime dateTime, int maxMembersCount)
         {
-            if (!string.IsNullOrEmpty(Title) && !string.IsNullOrEmpty(Address) && !DateTime.Equals(null) && !MaxMembersCount.Equals(null) && MaxMembersCount >= 2)
+            if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(address) && !dateTime.Equals(null) && !maxMembersCount.Equals(null) && maxMembersCount >= 2)
             {
-                Event new_event = new Event(Title, User.Identity.GetUserId(), Address, DateTime, MaxMembersCount);
+                Event _event = new Event(title, User.Identity.GetUserId(), address, dateTime, maxMembersCount);
+                _event.Fields = addFields;
                 bool result = EventManager.Add(new_event);
                 if (result)
                 {
@@ -65,12 +71,6 @@ namespace EventsPlanning.Controllers
                 ModelState.AddModelError(string.Empty, "Некоторые данные не были введены");
             }
             return View();
-        }
-
-        public ActionResult AddField()
-        {
-            new_event.Fields.Add(new AdditionalField());
-            return View(new_event);
         }
 
         [HttpGet]
