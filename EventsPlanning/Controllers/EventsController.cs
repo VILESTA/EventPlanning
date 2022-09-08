@@ -11,6 +11,8 @@ using EventsPlanning.Models;
 using Microsoft.Owin.BuilderProperties;
 using System.Data.Entity.Spatial;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Encodings.Web;
 
 namespace EventsPlanning.Controllers
 {
@@ -32,10 +34,13 @@ namespace EventsPlanning.Controllers
             }
         }
 
+        Event new_event { get; set; } = new Event();
+
         [Authorize(Roles = "admin")]
         public ActionResult Create()
         {
-            return View(new Event());
+            new_event = new Event();
+            return View(new_event);
         }
 
         [Authorize(Roles = "admin")]
@@ -60,6 +65,12 @@ namespace EventsPlanning.Controllers
                 ModelState.AddModelError(string.Empty, "Некоторые данные не были введены");
             }
             return View();
+        }
+
+        public ActionResult AddField()
+        {
+            new_event.Fields.Add(new AdditionalField());
+            return View(new_event);
         }
 
         [HttpGet]

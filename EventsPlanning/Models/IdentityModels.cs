@@ -60,9 +60,6 @@ namespace EventsPlanning.Models
 
         public Event()
         {
-            Fields.Add(new AdditionalField());
-            Fields.Add(new AdditionalField());
-            Fields.Add(new AdditionalField());
         }
 
         public Event(string title, string authorID, string address, DateTime dateTime, int maxMembersCount)
