@@ -50,12 +50,15 @@ namespace EventsPlanning.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult Create(string title, List<AdditionalField> addFields, string address, DateTime dateTime, int maxMembersCount)
+        public ActionResult Create(Event _event, List<string> names, List<string> values)
         {
-            if (!string.IsNullOrEmpty(title) && !string.IsNullOrEmpty(address) && !dateTime.Equals(null) && !maxMembersCount.Equals(null) && maxMembersCount >= 2)
+            if(_event != null)
             {
-                Event _event = new Event(title, User.Identity.GetUserId(), address, dateTime, maxMembersCount);
-                _event.Fields = addFields;
+                _event.AuthorId = User.Identity.GetUserId();
+                for (int i = 0; i < names.Count; i++)
+                {
+                    _event.Fields.Add(new AdditionalField() { Id = Guid.NewGuid().ToString(), Name = names[i], Value = values[i] });
+                }
                 bool result = EventManager.Add(new_event);
                 if (result)
                 {

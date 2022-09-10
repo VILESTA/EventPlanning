@@ -9,7 +9,12 @@
         <h6>Организатор: @ViewBag.Author</h6>
     </div>
     <div class="row">
-        <h3>@Model.EventId</h3>
+        <ul class="list-group">
+            @foreach (var item in Model.Fields)
+            {
+                <li class="list-group-item">@item.Name: @item.Value</li>
+            }
+        </ul>
     </div>
     <div class="row">
         <div class="col">

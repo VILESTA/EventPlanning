@@ -49,20 +49,12 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Fields, "Дополнительная информация", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            <div class="form-horizontal container">
-                @foreach (var item in Model.Fields)
-                {
-                    <div class="form-group">
-                        @Html.EditorFor(model => item.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Название поля доп. информации" } })
-
-                        @Html.EditorFor(model => item.Value, new { htmlAttributes = new { @class = "form-control", placeholder = "Значение поля доп. информации" } })
-                    </div>
-                }
+            <div class="form-horizontal container" id="fieldsList">
             </div>
             <div class="form-horizontal container">
                 <div class="form-group">
-                    @Html.ActionLink("Добавить доп. поле", "Create", routeValues: new { addFieldsCount = Model.Fields.Count + 1 }, htmlAttributes: new { @class = "btn btn-default" })
-                    @Html.ActionLink("Удалить поле", "Create", routeValues: new { addFieldsCount = Model.Fields.Count - 1 }, htmlAttributes: new { @class = "btn btn-danger" })
+                    <a class="addField btn btn-default">Добавить новое поле</a>
+                    @*@Html.ActionLink("Удалить поле", "Create", routeValues: new { addFieldsCount = Model.Fields.Count - 1 }, htmlAttributes: new { @class = "btn btn-danger" })*@
                 </div>
             </div>
         </div>
@@ -74,6 +66,23 @@
         </div>
     </div>
 </div>
+}
+
+@section Scripts {
+   <script>
+       $(function () {
+            var i = 0;
+            $('.addField').click(function()
+            {
+                i++;
+                var html2Add= "<div class='form-group'>" +
+                        "<input type='text' class='form-control col-md-1' name='names' placeholder = 'Название поля доп.информации' />" +
+                        "<input type='text' class='form-control col-md-5' name='values' placeholder = 'Значение поля доп.информации' />" +
+                    "</div>";
+                $('#fieldsList').append(html2Add);
+            })
+       })
+    </script>
 }
 
 <div>

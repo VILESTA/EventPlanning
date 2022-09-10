@@ -27,7 +27,11 @@ namespace EventsPlanning.Models
     public class AdditionalField
     {
         public string Id { get; set; }
+
+        [BindProperty]
         public string Name { get; set; }
+
+        [BindProperty]
         public string Value { get; set; }
 
         public AdditionalField()
