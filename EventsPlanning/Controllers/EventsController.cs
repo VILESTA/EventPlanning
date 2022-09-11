@@ -180,6 +180,15 @@ namespace EventsPlanning.Controllers
             return EventManager.IsUserOnEvent(cur_event, User.Identity.GetUserId());
         }
 
+        public bool IsInAccount()
+        {
+            if(User != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public int CountOfUsersOnEvent(string eventId)
         {
             return EventManager.CountOfMembersOfEvent(EventManager.Events.FirstOrDefault(e => e.EventId == eventId));

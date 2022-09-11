@@ -4,6 +4,7 @@
 }
 <h2>@ViewBag.Title</h2>
 <h3>@ViewBag.Message</h3>
+<hr />
 @foreach (var _event in Model)
 {
     <div class="row">
@@ -27,7 +28,7 @@
                         <div class="row">
                             @Html.ActionLink("Подробнее", "Event", "Events", routeValues: new { eventId = _event.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
                         </div>
-                    </div>                    
+                    </div>
                 </div>
             </div>
         </div>
@@ -35,10 +36,10 @@
 }
 @if (User != null && User.IsInRole("admin"))
 {
-    <hr/>
+    <hr />
     <div class="row m-3">
         <div class="col-md-4">
-            @Html.ActionLink("Добавить мероприятие", "Create", "Events", routeValues: null, htmlAttributes: new {@class = "btn btn-primary"})
+            @Html.ActionLink("Добавить мероприятие", "Create", "Events", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
         </div>
     </div>
 }
