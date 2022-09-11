@@ -34,18 +34,11 @@ namespace EventsPlanning.Controllers
             }
         }
 
-        Event new_event { get; set; } = new Event();
-
         [Authorize(Roles = "admin")]
         [HttpGet]
-        public ActionResult Create(int addFieldsCount = 0)
+        public ActionResult Create()
         {
-            if (addFieldsCount < 0) addFieldsCount = 0;
-            for (int i = 0; i < addFieldsCount; i++)
-            {
-                new_event.Fields.Add(new AdditionalField());
-            }
-            return View(new_event);
+            return View(new Event());
         }
 
         [Authorize(Roles = "admin")]
@@ -55,11 +48,17 @@ namespace EventsPlanning.Controllers
             if(_event != null)
             {
                 _event.AuthorId = User.Identity.GetUserId();
+                List<AdditionalField> fields = new List<AdditionalField>();
                 for (int i = 0; i < names.Count; i++)
                 {
-                    _event.Fields.Add(new AdditionalField() { Id = Guid.NewGuid().ToString(), Name = names[i], Value = values[i] });
+                    fields.Add(new AdditionalField() { Id = Guid.NewGuid().ToString(), Name = names[i], Value = values[i] });
                 }
-                bool result = EventManager.Add(new_event);
+                List<EventFields> eventFields = new List<EventFields>();
+                foreach (AdditionalField field in fields)
+                {
+                    eventFields.Add(new EventFields() { EventId = _event.EventId, FieldId = field.Id });
+                }
+                bool result = EventManager.Add(_event, fields, eventFields);
                 if (result)
                 {
                     return RedirectToAction("Index", "Home");
@@ -67,6 +66,7 @@ namespace EventsPlanning.Controllers
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Произошла неизвестная ошибка при добавлении мероприятия");
+                    ModelState.AddModelError(string.Empty, _event.ToString());
                 }
             }
             else
@@ -124,7 +124,7 @@ namespace EventsPlanning.Controllers
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
             EventManager.SignUpUser(cur_event, User.Identity.GetUserId());
-            return View("Event", cur_event);
+            return RedirectToAction("Event", routeValues: new { eventId = cur_event.EventId });
         }
 
         [HttpGet]
@@ -140,7 +140,7 @@ namespace EventsPlanning.Controllers
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
             EventManager.SignOutUser(cur_event, User.Identity.GetUserId());
-            return View("Event", cur_event);
+            return RedirectToAction("Event", routeValues: new { eventId = cur_event.EventId });
         }
 
         public bool IsUserOnEvent(string eventId)
@@ -180,7 +180,10 @@ namespace EventsPlanning.Controllers
             return EventManager.IsUserOnEvent(cur_event, User.Identity.GetUserId());
         }
 
-
+        public int CountOfUsersOnEvent(string eventId)
+        {
+            return EventManager.CountOfMembersOfEvent(EventManager.Events.FirstOrDefault(e => e.EventId == eventId));
+        }
 
         [Authorize(Roles = "admin")]
         public ActionResult Edit()

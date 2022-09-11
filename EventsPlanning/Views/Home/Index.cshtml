@@ -11,9 +11,15 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">@_event.Title</h3>
+                    <h3 class="panel-title">@(((EventsPlanning.Controllers.HomeController)Html.ViewContext.Controller).EventManager.CountOfMembersOfEvent(_event)) из @_event.MaxMembersCount</h3>
                 </div>
                 <div class="panel-body">
-                    <p>@_event.EventId</p>
+                    <ul class="list-group">
+                        @foreach (var item in ((EventsPlanning.Controllers.HomeController)Html.ViewContext.Controller).EventManager.GetFields(_event.EventId))
+                        {
+                            <li class="list-group-item">@item</li>
+                        }
+                    </ul>
                     <p class="text-right">@_event.Address | @_event.DateTime</p>
                 </div>
                 <div class="panel-footer">

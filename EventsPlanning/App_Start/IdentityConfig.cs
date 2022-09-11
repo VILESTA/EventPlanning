@@ -15,6 +15,9 @@ using System.Diagnostics;
 using System.Web.DynamicData;
 using System.Collections.ObjectModel;
 using System.Net.PeerToPeer;
+using System.Data.Entity.Validation;
+using Microsoft.Extensions.Logging;
+using System.Data.Entity.Core;
 
 namespace EventsPlanning
 {
@@ -157,19 +160,50 @@ namespace EventsPlanning
             return new ApplicationEventManager(_context.Get<ApplicationEventDbContext>().Events.ToList());
         }
 
-        public bool Add(Event _event)
+        public bool Add(Event _event, List<AdditionalField> fields, List<EventFields> eventFields)
         {
             try
             {
-                Events.Add(_event);
                 context.Get<ApplicationEventDbContext>().Entry(_event).State = EntityState.Added;
+                foreach (var item in fields)
+                {
+                    context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Added;
+                }
+                foreach (var item in eventFields)
+                {
+                    context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Added;
+                }
                 context.Get<ApplicationEventDbContext>().SaveChanges();
                 return true;
             }
-            catch (Exception)
+            catch (DbEntityValidationException exc)
             {
+                foreach (var item in exc.EntityValidationErrors.ToList())
+                {
+                    foreach (var error in item.ValidationErrors)
+                    {
+                        Debug.WriteLine(error.ErrorMessage);
+                    }
+                    Debug.WriteLine("---");
+                }
                 return false;
             }
+        }
+
+        public List<string> GetFields(string eventId)
+        {
+            List<string> additionalInfo = new List<string>();
+            var infos = context.Get<ApplicationEventDbContext>().additionalFields.ToList();
+            var fields = context.Get<ApplicationEventDbContext>().eventFields.ToList();
+            foreach (var item in fields)
+            {
+                if(item.EventId == eventId)
+                {
+                    AdditionalField field = infos.First(x => x.Id == item.FieldId);
+                    additionalInfo.Add($"{field.Name}: {field.Value}");
+                }
+            }
+            return additionalInfo;
         }
 
         public bool Delete(Event _event)
@@ -183,7 +217,18 @@ namespace EventsPlanning
                         context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Deleted;
                     }
                 }
-                Events.Remove(_event);
+                foreach (var item in context.Get<ApplicationEventDbContext>().eventFields)
+                {
+                    if (item.EventId == _event.EventId)
+                    {
+                        var field = context.Get<ApplicationEventDbContext>().additionalFields.First(f => f.Id == item.FieldId);
+                        if (field != null)
+                        {
+                            context.Get<ApplicationEventDbContext>().Entry(field).State = EntityState.Deleted;
+                        }
+                        context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Deleted;
+                    }
+                }
                 context.Get<ApplicationEventDbContext>().Entry(_event).State = EntityState.Deleted;
                 context.Get<ApplicationEventDbContext>().SaveChanges();
                 return true;

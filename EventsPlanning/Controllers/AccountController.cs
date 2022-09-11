@@ -181,18 +181,18 @@ namespace EventsPlanning.Controllers
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
 
                     var emailMessage = new MimeMessage();
-                    emailMessage.From.Add(new MailboxAddress("Подтверждение регистрации", "tkachik.yuratkachik@yandex.ru"));
+                    emailMessage.From.Add(new MailboxAddress("Подтверждение регистрации на Events Planning", "eventsplanningbot@yandex.by"));
                     emailMessage.To.Add(new MailboxAddress("", user.Email));
-                    emailMessage.Subject = "Регистрация Events Planning";
+                    emailMessage.Subject = "Events Planning";
                     emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
                     {
-                        Text = "Подтвердите вашу учетную запись Event Planning, щелкнув <a href=\"" + callbackUrl + "\">здесь</a>"
+                        Text = "Подтвердите вашу учетную запись Event Planning, щелкнув <a href=\"" + callbackUrl + "\">здесь.</a>"
                     };
 
                     using (var client = new SmtpClient())
                     {
-                        await client.ConnectAsync("smtp.yandex.ru", 25, false);
-                        await client.AuthenticateAsync("tkachik.yuratkachik@yandex.ru", "DeFrague228GrandFinal");
+                        await client.ConnectAsync("smtp.yandex.ru", 465, true);
+                        await client.AuthenticateAsync("eventsplanningbot@yandex.by", "Asusgx800");
                         await client.SendAsync(emailMessage);
 
                         await client.DisconnectAsync(true);

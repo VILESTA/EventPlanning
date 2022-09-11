@@ -10,9 +10,9 @@
     </div>
     <div class="row">
         <ul class="list-group">
-            @foreach (var item in Model.Fields)
+            @foreach (var item in ((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetFields(Model.EventId))
             {
-                <li class="list-group-item">@item.Name: @item.Value</li>
+                <li class="list-group-item">@item</li>
             }
         </ul>
     </div>
@@ -31,13 +31,20 @@
                     }
                     else
                     {
-                        @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                        if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).CountOfUsersOnEvent(Model.EventId) < Model.MaxMembersCount)
+                        {
+                            @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                        }
+                        else
+                        {
+                            <button class="btn btn-default disabled">Уже все места заняты, ожидайте освобождения мест</button>
+                        }
                     }
                 }
                 else
                 {
                     if (ViewBag.IsAuthor == 0)
-                    { 
+                    {
                         @Html.ActionLink("Удалить мероприятие", "Delete", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-danger" })
                     }
                     else
@@ -48,7 +55,14 @@
                         }
                         else
                         {
-                            @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                            if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).CountOfUsersOnEvent(Model.EventId) < Model.MaxMembersCount)
+                            {
+                                @Html.ActionLink("Записаться на мероприятие", "SignUpForEvent", routeValues: new { eventId = Model.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                            }
+                            else
+                            {
+                                <button class="btn btn-default disabled">Уже все места заняты, ожидайте освобождения мест</button>
+                            }
                         }
                     }
                 }

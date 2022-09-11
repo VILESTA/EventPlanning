@@ -40,6 +40,16 @@ namespace EventsPlanning.Models
         }
     }
 
+    public class EventFields
+    {
+        [Key]
+        [BindProperty]
+        public string FieldId { get; set; }
+
+        [BindProperty]
+        public string EventId { get; set; }
+    }
+
     public class Event
     {
         [BindProperty]
@@ -50,9 +60,6 @@ namespace EventsPlanning.Models
         public string Title { get; set; }
 
         [BindProperty]
-        public List<AdditionalField> Fields { get; set; } = new List<AdditionalField>();
-
-        [BindProperty]
         [DataType(DataType.Date)]
         public DateTime DateTime { get; set; }
         
@@ -60,10 +67,11 @@ namespace EventsPlanning.Models
         public string Address { get; set; }
 
         [BindProperty]
-        public int MaxMembersCount { get; set; }
+        public int MaxMembersCount { get; set; } = 1;
 
         public Event()
         {
+            EventId = Guid.NewGuid().ToString();
         }
 
         public Event(string title, string authorID, string address, DateTime dateTime, int maxMembersCount)
@@ -74,6 +82,11 @@ namespace EventsPlanning.Models
             Address = address;
             DateTime = dateTime;
             MaxMembersCount = maxMembersCount;
+        }
+
+        public override string ToString()
+        {
+            return $"{EventId}\n{Title} [{AuthorId}]\n{Address} | {DateTime}\n{MaxMembersCount}";
         }
     }
 
@@ -113,6 +126,8 @@ namespace EventsPlanning.Models
     {
         public DbSet<Event> Events { get; set; }
         public DbSet<EventUsers> EventsUsers { get; set; }
+        public DbSet<AdditionalField> additionalFields { get; set; }
+        public DbSet<EventFields> eventFields { get; set; }
         public ApplicationEventDbContext() : base("DefaultConnection")
         {
             Database.CreateIfNotExists();
