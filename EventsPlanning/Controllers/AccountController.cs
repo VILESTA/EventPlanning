@@ -212,7 +212,7 @@ namespace EventsPlanning.Controllers
         [AllowAnonymous]
         public string Confirm(string Email)
         {
-            return $"На почтовый адрес {Email} высланы дальнейшие инструкции по завершению регистрации\nДля продолжения <a href=\"{Url.Action("Login", "Account")}\" >нажмите здесь!</a>";
+            return $"На почтовый адрес {Email} высланы дальнейшие инструкции по завершению регистрации (Письмо может попасть в спам, так что проверяйте)\nДля продолжения <a href=\"{Url.Action("Login", "Account")}\" >нажмите здесь!</a>";
         }
 
         //
