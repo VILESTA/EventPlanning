@@ -3,11 +3,10 @@
     ViewBag.Title = "Мой профиль";
 }
 
-<h2>@ViewBag.Title.</h2>
-
 <p class="text-success">@ViewBag.StatusMessage</p>
+<h2>@ViewBag.Title</h2>
 <div>
-    <h4>Мои мероприятия</h4>
+    <h6>Мои мероприятия</h6>
     <div class="container-fluid py-3 px-0">
         @{
             if (((EventsPlanning.Controllers.ManageController)this.ViewContext.Controller).GetuUserEvents().Count > 0)
@@ -19,19 +18,18 @@
                     {
                         break;
                     }
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">@_event.Title</h3>
-                            <h3 class="panel-title">@((ApplicationEventManager.CountOfMembersOfEvent(_event))) из @_event.MaxMembersCount</h3>
-                        </div>
-                        <div class="panel-body">
-                            <ul class="list-group">
-                                <li class="list-group-item">Дополнительная информация</li>
-                                <li class="list-group-item">@(((EventsPlanning.Controllers.ManageController)Html.ViewContext.Controller).EventManager.GetDescription(_event.EventId))</li>
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">@_event.Title [@((ApplicationEventManager.CountOfMembersOfEvent(_event))) из @_event.MaxMembersCount]</h3>
+                            <ul class="list-group my-3">
+                                <li class="list-group-item">Дополнительная информация:</li>
+                                <li class="list-group-item">@(((EventsPlanning.Controllers.HomeController)Html.ViewContext.Controller).EventManager.GetDescription(_event.EventId))</li>
                             </ul>
-                            <p class="text-right">@_event.Address | @_event.DateTime</p>
+                            <div class="container-fluid px-3">
+                                <p class="h6 text-muted text-right row">@_event.Address | @_event.DateTime</p>
+                            </div>
                         </div>
-                        <div class="panel-footer">
+                        <div class="card-footer px-1">
                             <div class="container-fluid">
                                 <div class="row">
                                     @Html.ActionLink("Подробнее", "Event", "Events", routeValues: new { eventId = _event.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
@@ -44,13 +42,12 @@
             }
             else
             {
-                    <p class="h1">Вы не записаны ни на одно предстоящее мероприятие</p>
-                }
+                <p class="h1">Вы не записаны ни на одно предстоящее мероприятие</p>
             }
+        }
     </div>
     <hr />
-    <h4>Изменение параметров учетной записи</h4>
-    <hr />
+    <h2>Изменение параметров учетной записи</h2>
     <dl class="dl-horizontal">
         <dt>Отбражаемое имя:</dt>
         <dd>
