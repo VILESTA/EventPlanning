@@ -8,9 +8,9 @@
     @foreach (var user in Model)
     {
         <tr>
-            <td>@user.Email</td>
-            <td>
-                <a href="/Roles/Edit?userId=@user.Id">Права доступа</a>
+            <td class="align-middle">@user.Email</td>
+            <td class="align-middle">
+                <a href="/Roles/Edit?userId=@user.Id" class="btn btn-primary">Права доступа</a>
             </td>
         </tr>
     }

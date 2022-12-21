@@ -4,14 +4,14 @@
     ViewBag.Title = $"Изменение ролей для пользователя {Model.UserEmail}";
 }
 
-<h2>Изменение ролей для пользователя @Model.UserEmail</h2>
+<h2 class="mb-3">Изменение ролей для пользователя @Model.UserEmail</h2>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" name="userId" value="@Model.UserId" />
     <div class="form-group">
         @foreach (IdentityRole role in Model.AllRoles)
         {
-            <input type="checkbox" name="roles" value="@role.Name"
+            <input type="checkbox" class="form-check-input mb-3" name="roles" value="@role.Name"
                    @(Model.UserRoles.Contains(role.Name) ? "checked=\"checked\"" : "") />@role.Name <br />
             }
     </div>
