@@ -16,10 +16,8 @@
                 </div>
                 <div class="panel-body">
                     <ul class="list-group">
-                        @foreach (var item in ((EventsPlanning.Controllers.HomeController)Html.ViewContext.Controller).EventManager.GetFields(_event.EventId))
-                        {
-                            <li class="list-group-item">@item</li>
-                        }
+                        <li class="list-group-item">Дополнительная информация:</li>
+                        <li class="list-group-item">@(((EventsPlanning.Controllers.HomeController)Html.ViewContext.Controller).EventManager.GetDescription(_event.EventId))</li>
                     </ul>
                     <p class="text-right">@_event.Address | @_event.DateTime</p>
                 </div>

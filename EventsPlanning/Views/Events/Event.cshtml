@@ -10,10 +10,8 @@
     </div>
     <div class="row">
         <ul class="list-group">
-            @foreach (var item in ((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetFields(Model.EventId))
-            {
-                <li class="list-group-item">@item</li>
-            }
+            <li class="list-group-item">Дополнительная информация</li>
+            <li class="list-group-item">@(((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetDescription(Model.EventId))</li>
         </ul>
     </div>
     <div class="row">

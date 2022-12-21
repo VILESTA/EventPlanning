@@ -160,19 +160,11 @@ namespace EventsPlanning
             return new ApplicationEventManager(_context.Get<ApplicationEventDbContext>().Events.ToList());
         }
 
-        public bool Add(Event _event, List<AdditionalField> fields, List<EventFields> eventFields)
+        public bool Add(Event _event)
         {
             try
             {
                 context.Get<ApplicationEventDbContext>().Entry(_event).State = EntityState.Added;
-                foreach (var item in fields)
-                {
-                    context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Added;
-                }
-                foreach (var item in eventFields)
-                {
-                    context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Added;
-                }
                 context.Get<ApplicationEventDbContext>().SaveChanges();
                 return true;
             }
@@ -190,20 +182,9 @@ namespace EventsPlanning
             }
         }
 
-        public List<string> GetFields(string eventId)
+        public string GetDescription(string eventId)
         {
-            List<string> additionalInfo = new List<string>();
-            var infos = context.Get<ApplicationEventDbContext>().additionalFields.ToList();
-            var fields = context.Get<ApplicationEventDbContext>().eventFields.ToList();
-            foreach (var item in fields)
-            {
-                if(item.EventId == eventId)
-                {
-                    AdditionalField field = infos.First(x => x.Id == item.FieldId);
-                    additionalInfo.Add($"{field.Name}: {field.Value}");
-                }
-            }
-            return additionalInfo;
+            return Events.First(e => e.EventId == eventId).Description;
         }
 
         public bool Delete(Event _event)
@@ -214,18 +195,6 @@ namespace EventsPlanning
                 {
                     if (item.EventId == _event.EventId)
                     {
-                        context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Deleted;
-                    }
-                }
-                foreach (var item in context.Get<ApplicationEventDbContext>().eventFields)
-                {
-                    if (item.EventId == _event.EventId)
-                    {
-                        var field = context.Get<ApplicationEventDbContext>().additionalFields.First(f => f.Id == item.FieldId);
-                        if (field != null)
-                        {
-                            context.Get<ApplicationEventDbContext>().Entry(field).State = EntityState.Deleted;
-                        }
                         context.Get<ApplicationEventDbContext>().Entry(item).State = EntityState.Deleted;
                     }
                 }

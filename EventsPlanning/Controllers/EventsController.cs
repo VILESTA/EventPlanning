@@ -43,22 +43,12 @@ namespace EventsPlanning.Controllers
 
         [Authorize(Roles = "admin")]
         [HttpPost]
-        public ActionResult Create(Event _event, List<string> names, List<string> values)
+        public ActionResult Create(Event _event)
         {
             if(_event != null)
             {
                 _event.AuthorId = User.Identity.GetUserId();
-                List<AdditionalField> fields = new List<AdditionalField>();
-                for (int i = 0; i < names.Count; i++)
-                {
-                    fields.Add(new AdditionalField() { Id = Guid.NewGuid().ToString(), Name = names[i], Value = values[i] });
-                }
-                List<EventFields> eventFields = new List<EventFields>();
-                foreach (AdditionalField field in fields)
-                {
-                    eventFields.Add(new EventFields() { EventId = _event.EventId, FieldId = field.Id });
-                }
-                bool result = EventManager.Add(_event, fields, eventFields);
+                bool result = EventManager.Add(_event);
                 if (result)
                 {
                     return RedirectToAction("Index", "Home");

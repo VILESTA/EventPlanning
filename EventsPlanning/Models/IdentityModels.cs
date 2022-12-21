@@ -24,32 +24,6 @@ namespace EventsPlanning.Models
         }
     }
 
-    public class AdditionalField
-    {
-        public string Id { get; set; }
-
-        [BindProperty]
-        public string Name { get; set; }
-
-        [BindProperty]
-        public string Value { get; set; }
-
-        public AdditionalField()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
-    }
-
-    public class EventFields
-    {
-        [Key]
-        [BindProperty]
-        public string FieldId { get; set; }
-
-        [BindProperty]
-        public string EventId { get; set; }
-    }
-
     public class Event
     {
         [BindProperty]
@@ -58,6 +32,8 @@ namespace EventsPlanning.Models
         public string AuthorId { get; set; }
         [BindProperty]
         public string Title { get; set; }
+        [BindProperty]
+        public string Description { get; set; }
 
         [BindProperty]
         [DataType(DataType.Date)]
@@ -126,8 +102,6 @@ namespace EventsPlanning.Models
     {
         public DbSet<Event> Events { get; set; }
         public DbSet<EventUsers> EventsUsers { get; set; }
-        public DbSet<AdditionalField> additionalFields { get; set; }
-        public DbSet<EventFields> eventFields { get; set; }
         public ApplicationEventDbContext() : base("DefaultConnection")
         {
             Database.CreateIfNotExists();
