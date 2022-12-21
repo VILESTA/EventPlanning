@@ -3,14 +3,18 @@
 @{
     ViewBag.Title = "Планирование мероприятия";
 }
-
-<h2>@ViewBag.Title</h2>
+<div class="container">
+    <div>
+        @Html.ActionLink("Вернуться к списку мероприятий", "Index", "Home", null, htmlAttributes: new { @class = "btn btn-default col-md-3 my-auto" })
+    </div>
+    <h2 class="col-md-9">@ViewBag.Title</h2>
+</div>
 
 @using (Html.BeginForm("Create", "Events", method:FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     
-<div class="form-horizontal">
+<div class="form-horizontal container-fluid">
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -49,14 +53,9 @@
     <div class="form-group">
         <label class="control-label col-md-2">Дополнительная информация</label>
         <div class="col-md-10">
-            <div class="form-horizontal container" id="fieldsList">
-            </div>
-            <div class="form-horizontal container">
-                <div class="form-group">
-                    <a class="addField btn btn-default">Добавить новое поле</a>
-                    <a class="deleteField btn btn-danger">Удалить поле</a>
-                </div>
-            </div>
+            <textarea class="form-control">
+
+            </textarea>
         </div>
     </div>
 
@@ -84,7 +83,3 @@
        })
     </script>
 }
-
-<div>
-    @Html.ActionLink("Вернуться к списку мероприятий", "Index", "Home", null, htmlAttributes: new { @class = "btn btn-default" })
-</div>

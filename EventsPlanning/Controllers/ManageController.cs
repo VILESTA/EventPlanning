@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using EventsPlanning.Models;
+using System.Collections.Generic;
 
 namespace EventsPlanning.Controllers
 {
@@ -15,15 +16,18 @@ namespace EventsPlanning.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        public ApplicationEventManager _eventManager;
+        public ApplicationEventDbContext eventContext;
 
         public ManageController()
         {
         }
 
-        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ApplicationEventManager eventManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            EventManager = eventManager;
         }
 
         public ApplicationSignInManager SignInManager
@@ -47,6 +51,18 @@ namespace EventsPlanning.Controllers
             private set
             {
                 _userManager = value;
+            }
+        }
+
+        public ApplicationEventManager EventManager
+        {
+            get
+            {
+                return _eventManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationEventManager>();
+            }
+            private set
+            {
+                _eventManager = value;
             }
         }
 
@@ -359,6 +375,19 @@ namespace EventsPlanning.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        public List<Event> GetuUserEvents()
+        {
+            List<Event> events = new List<Event>();
+            foreach (var item in EventManager.Events)
+            {
+                if (EventManager.IsUserOnEvent(item, User.Identity.GetUserId()))
+                {
+                    events.Add(item);
+                }
+            }
+            return events;
         }
 
 #region Вспомогательные приложения

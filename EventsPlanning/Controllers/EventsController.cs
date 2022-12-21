@@ -84,7 +84,7 @@ namespace EventsPlanning.Controllers
                 return View("Error");
             }
             Event cur_event = EventManager.Events.First(e => e.EventId == eventId);
-            ViewBag.CountOfMembers = EventManager.CountOfMembersOfEvent(cur_event).ToString();
+            ViewBag.CountOfMembers = ApplicationEventManager.CountOfMembersOfEvent(cur_event).ToString();
             ViewBag.Author = EventManager.AuthorOfEvent(cur_event);
             ViewBag.IsAuthor = String.Compare(EventManager.AuthorIDOfEvent(cur_event), User.Identity.GetUserId());
             return View(cur_event);
@@ -191,7 +191,7 @@ namespace EventsPlanning.Controllers
 
         public int CountOfUsersOnEvent(string eventId)
         {
-            return EventManager.CountOfMembersOfEvent(EventManager.Events.FirstOrDefault(e => e.EventId == eventId));
+            return ApplicationEventManager.CountOfMembersOfEvent(EventManager.Events.FirstOrDefault(e => e.EventId == eventId));
         }
 
         [Authorize(Roles = "admin")]

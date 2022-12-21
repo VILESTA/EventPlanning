@@ -324,7 +324,7 @@ namespace EventsPlanning
             }
         }
 
-        public int CountOfMembersOfEvent(Event _event)
+        public static int CountOfMembersOfEvent(Event _event)
         {
             int count = 0;
             List<EventUsers> eventUsers = context.Get<ApplicationEventDbContext>().EventsUsers.ToList();

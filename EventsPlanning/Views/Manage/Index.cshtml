@@ -7,13 +7,57 @@
 
 <p class="text-success">@ViewBag.StatusMessage</p>
 <div>
+    <h4>Мои мероприятия</h4>
+    <div class="container-fluid py-3 px-0">
+        @{
+            if (((EventsPlanning.Controllers.ManageController)this.ViewContext.Controller).GetuUserEvents().Count > 0)
+            {
+                int countOfEvents = 0;
+                foreach (var _event in ((EventsPlanning.Controllers.ManageController)this.ViewContext.Controller).GetuUserEvents())
+                {
+                    if (countOfEvents == 3)
+                    {
+                        break;
+                    }
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">@_event.Title</h3>
+                            <h3 class="panel-title">@((ApplicationEventManager.CountOfMembersOfEvent(_event))) из @_event.MaxMembersCount</h3>
+                        </div>
+                        <div class="panel-body">
+                            <ul class="list-group">
+                                @foreach (var item in ((EventsPlanning.Controllers.ManageController)Html.ViewContext.Controller).EventManager.GetFields(_event.EventId))
+                                {
+                                    <li class="list-group-item">@item</li>
+                                }
+                            </ul>
+                            <p class="text-right">@_event.Address | @_event.DateTime</p>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    @Html.ActionLink("Подробнее", "Event", "Events", routeValues: new { eventId = _event.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    countOfEvents++;
+                }
+            }
+            else
+            {
+                    <p class="h1">Вы не записаны ни на одно предстоящее мероприятие</p>
+                }
+            }
+    </div>
+    <hr />
     <h4>Изменение параметров учетной записи</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>Отбражаемое имя:</dt>
         <dd>
             [
-                @Html.ActionLink("Сменить", "ChangeUsername")
+            @Html.ActionLink("Сменить", "ChangeUsername")
             ]
         </dd>
         <dt>Пароль:</dt>
