@@ -51,22 +51,18 @@
     <dl class="dl-horizontal">
         <dt>Отбражаемое имя:</dt>
         <dd>
-            [
-            @Html.ActionLink("Сменить", "ChangeUsername")
-            ]
+            @Html.ActionLink("Сменить", "ChangeUsername", null, new { @class = "btn btn-secondary" })
         </dd>
         <dt>Пароль:</dt>
         <dd>
-            [
             @if (Model.HasPassword)
             {
-                @Html.ActionLink("Сменить", "ChangePassword")
+                @Html.ActionLink("Сменить", "ChangePassword", null, new { @class = "btn btn-secondary" })
             }
             else
             {
-                @Html.ActionLink("Создать", "SetPassword")
+                @Html.ActionLink("Создать", "SetPassword", null, new {@class = "btn btn-secondary" })
             }
-            ]
         </dd>
     </dl>
 </div>

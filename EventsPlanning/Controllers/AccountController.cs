@@ -436,7 +436,6 @@ namespace EventsPlanning.Controllers
 
         //
         // POST: /Account/LogOff
-        [HttpPost]
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
