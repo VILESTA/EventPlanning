@@ -19,10 +19,10 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">@Html.ActionLink("Главная", "Index", "Home", new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Главная", "Index", "Home",new { area = "" } , new { @class = "nav-link" })</li>
                     @*<li>@Html.ActionLink("Роли", "Index", "Roles")</li>*@
-                    <li class="nav-item">@Html.ActionLink("Информация", "About", "Home", new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Связаться", "Contact", "Home", new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Информация", "About", "Home",new { area = "" } , new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Связаться", "Contact", "Home",new { area = "" } , new { @class = "nav-link" })</li>
                 </ul>
                 <form class="d-flex">
                     @Html.Partial("_LoginPartial")
@@ -30,9 +30,9 @@
             </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container-md body-content pt-3">
         @RenderBody()
-        <footer class=" fixed-bottom">
+        <footer class="">
             <hr />
             <p class="container-md">&copy; @DateTime.Now.Year - Events Planning ASP.NET</p>
         </footer>

@@ -11,8 +11,8 @@
     <div class="form-horizontal">
         <hr />
         <div class="form-group">
-            @Html.LabelFor(m => m.UserName, "Отображаемое имя", new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
+            @Html.LabelFor(m => m.UserName, "Отображаемое имя", new { @class = "col-md-2 control-label mb-1" })
+            <div class="col-md-10 mb-3">
                 @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", name = "Username" })
             </div>
         </div>

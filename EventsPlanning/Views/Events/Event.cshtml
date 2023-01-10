@@ -6,10 +6,13 @@
 <div class="container-fluid">
     <h2 class="row">@Model.Title [ @ViewBag.CountOfMembers / @Model.MaxMembersCount ]</h2>
     <h6 class="text-muted mb-3 row">Организатор: @ViewBag.Author</h6>
-    <ul class="list-group mb-3 row">
-        <li class="list-group-item">Дополнительная информация</li>
-        <li class="list-group-item">@(((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetDescription(Model.EventId))</li>
-    </ul>
+    @if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetDescription(Model.EventId) != "")
+    {
+        <ul class="list-group mb-3 row">
+            <li class="list-group-item">Дополнительная информация</li>
+            <li class="list-group-item">@(((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetDescription(Model.EventId))</li>
+        </ul>
+    }
     <div class="row mb-3">
         <p class="col"></p>
         <p class="col"></p>
@@ -67,4 +70,17 @@
             <button class="btn btn-default disabled">Войдите в аккаунт для записи на мероприятие</button>
         }
     </div>
+    @if (((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).IsInAccount() == true)
+    {
+        if (User.IsInRole("admin"))
+        {
+            <ul class="list-group my-3 row">
+                <li class="list-group-item">Зарегистрированные на мероприятия пользователи</li>
+                @foreach (var item in ((EventsPlanning.Controllers.EventsController)Html.ViewContext.Controller).EventManager.GetEventUsers(Model.EventId))
+                {
+                    <li class="list-group-item">@item</li>
+                }
+            </ul>
+        }
+    }
 </div>

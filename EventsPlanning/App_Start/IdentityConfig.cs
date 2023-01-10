@@ -147,17 +147,21 @@ namespace EventsPlanning
     {
         public ApplicationUser cur_user = null;
         public List<Event> Events { get; set; }
+        public List<EventUsers> EventsUsers { get; set; }
+        public List<ApplicationUser> Users { get; set; }
         public static IOwinContext context { get; set; }
 
-        public ApplicationEventManager(List<Event> events)
+        public ApplicationEventManager(List<Event> events, List<EventUsers> eventsUsers, List<ApplicationUser> users)
         {
             Events = events;
+            EventsUsers = eventsUsers;
+            Users = users;
         }
 
         public static ApplicationEventManager Create(IdentityFactoryOptions<ApplicationEventManager> options, IOwinContext _context)
         {
             context = _context;
-            return new ApplicationEventManager(_context.Get<ApplicationEventDbContext>().Events.ToList());
+            return new ApplicationEventManager(_context.Get<ApplicationEventDbContext>().Events.ToList(), _context.Get<ApplicationEventDbContext>().EventsUsers.ToList(), _context.Get<ApplicationDbContext>().Users.ToList());
         }
 
         public bool Add(Event _event)
@@ -185,6 +189,19 @@ namespace EventsPlanning
         public string GetDescription(string eventId)
         {
             return Events.First(e => e.EventId == eventId).Description;
+        }
+
+        public List<string> GetEventUsers(string eventId)
+        {
+            List<string> users = new List<string>();
+            foreach (var item in EventsUsers)
+            {
+                if(item.EventId == eventId)
+                {
+                    users.Add(Users.First(u => u.Id == item.UserId).UserName);
+                }
+            }
+            return users;
         }
 
         public bool Delete(Event _event)

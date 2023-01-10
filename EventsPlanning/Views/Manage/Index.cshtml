@@ -4,9 +4,8 @@
 }
 
 <p class="text-success">@ViewBag.StatusMessage</p>
-<h2>@ViewBag.Title</h2>
 <div>
-    <h6>Мои мероприятия</h6>
+    <h2>Мои мероприятия</h2>
     <div class="container-fluid py-3 px-0">
         @{
             if (((EventsPlanning.Controllers.ManageController)this.ViewContext.Controller).GetuUserEvents().Count > 0)
@@ -48,12 +47,12 @@
     </div>
     <hr />
     <h2>Изменение параметров учетной записи</h2>
-    <dl class="dl-horizontal">
-        <dt>Отбражаемое имя:</dt>
+    <dl class="dl-horizontal mb-3">
+        <dt class="mb-1">Отбражаемое имя:</dt>
         <dd>
             @Html.ActionLink("Сменить", "ChangeUsername", null, new { @class = "btn btn-secondary" })
         </dd>
-        <dt>Пароль:</dt>
+        <dt class="mb-1">Пароль:</dt>
         <dd>
             @if (Model.HasPassword)
             {

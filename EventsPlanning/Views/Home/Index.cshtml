@@ -11,15 +11,18 @@
             <div class="card">
                 <div class="card-body">
                     <h3 class="card-title">@_event.Title [@((ApplicationEventManager.CountOfMembersOfEvent(_event))) из @_event.MaxMembersCount]</h3>
-                    <ul class="list-group my-3">
-                        <li class="list-group-item">Дополнительная информация:</li>
-                        <li class="list-group-item">@(((EventsPlanning.Controllers.HomeController)Html.ViewContext.Controller).EventManager.GetDescription(_event.EventId))</li>
-                    </ul>
+                    @if (_event.Description != "")
+                    {
+                        <ul class="list-group my-3">
+                            <li class="list-group-item">Дополнительная информация:</li>
+                            <li class="list-group-item">@(_event.Description)</li>
+                        </ul>
+                    }
                     <div class="container-fluid px-3">
                             <p class="h6 text-muted text-right row">@_event.Address | @_event.DateTime</p>
                     </div>
                 </div>
-                <div class="card-footer px-1">
+                <div class="card-footer p-3">
                     <div class="container-fluid">
                         <div class="row">
                             @Html.ActionLink("Подробнее", "Event", "Events", routeValues: new { eventId = _event.EventId }, htmlAttributes: new { @class = "btn btn-primary" })
